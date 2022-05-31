@@ -35,12 +35,50 @@ class RegisterForm(forms.ModelForm):
         add_placeholder(self.fields['last_name'], 'Ex.: Doe')
         add_placeholder(self.fields['username'], 'Your username')
         add_placeholder(self.fields['email'], 'Your e-mail')
+        add_placeholder(self.fields['password'], 'Type your password')
+        add_placeholder(self.fields['password2'], 'Repeat your password')
 
+    username = forms.CharField(
+        label='Username',
+        help_text=(
+            'Username must have letters, numbers or one of those @/./+/-/_. '
+            'The length should be between 4 and 150 characteres.'
+        ),
+        error_messages={
+            'required': 'This field must not be empty',
+            'min_length': 'Username must have at least 4 characters',
+            'max_length': 'Username must have less than 150 characters',
+        },
+        min_length=4,
+        max_length=150,
+    )
+    first_name = forms.CharField(
+        error_messages={
+            'required': 'Write your first name',
+        },
+        required=True,
+        label='First name',
+    )
+    last_name = forms.CharField(
+        error_messages={
+            'required': 'Write your last name',
+        },
+        required=True,
+        label='Last name',
+    )
+    email = forms.EmailField(
+        error_messages={
+            'required': 'E-mail is required',
+        },
+        required=True,
+        label='E-mail',
+        help_text='The e-mail must be valid.',
+    )
     password = forms.CharField(
         required=True,
         widget=forms.PasswordInput(
             attrs={
-                'placeholder': 'Repeat your password'
+                # 'placeholder': 'Repeat your password'
             }
         ),
         error_messages={
@@ -52,17 +90,19 @@ class RegisterForm(forms.ModelForm):
             ' at least 8 characters.'
         ),
         validators=[strong_password, ],
+        label='Password',
     )
     password2 = forms.CharField(
         required=True,
         widget=forms.PasswordInput(
             attrs={
-                'placeholder': 'Repeat your password'
+                # 'placeholder': 'Repeat yours password'
             }
         ),
         error_messages={
-            'required': 'Password must not be empty'
-        }
+            'required': 'Please, repeat your password'
+        },
+        label='Password2',
     )
 
     class Meta:
@@ -74,47 +114,37 @@ class RegisterForm(forms.ModelForm):
             'email',
             'password',
         ]
-        # exclude = ['first_name']
         labels = {
             'first_name': 'First name',
             'last_name': 'Last name',
             'username': 'Username',
             'email': 'E-mail',
-            'password': 'Password',
         }
-        help_texts = {
-            'email': 'The e-mail must be valid.',
-        }
-        error_messages = {
-            'username': {
-                'required': 'This field must not be empty',
-            }
-        }
+
         widgets = {
             'first_name': forms.TextInput(
                 attrs={
-                    'placeholder': 'Type your username here',
+                    # 'placeholder': 'Type your username here',
                     'class': 'input text-input',
                 }
             ),
             'password': forms.PasswordInput(
                 attrs={
-                    'placeholder': 'Type your password here',
+                    # 'placeholder': 'Type your password here',
                 }
             ),
         }
 
-    def clean_password(self):
-        data = self.cleaned_data.get('password')
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        exists = User.objects.filter(email=email).exists()
 
-        if 'atenção' in data:
+        if exists:
             raise ValidationError(
-                'Não digite %(value)s no campo password',
-                code='invalid',
-                params={'value': '"atenção"'},
+                'User e-mail is already in use', code='invalid',
             )
 
-        return data
+        return email
 
     def clean(self):
         cleaned_data = super().clean()
