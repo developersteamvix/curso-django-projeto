@@ -12,6 +12,7 @@ PER_PAGE = int(os.environ.get('PER_PAGE', 6))
 QTY_PAGE = int(os.environ.get('QTY_PAGE', 4))
 
 
+# Create your views here.
 class RecipeListViewBase(ListView):
     model = Recipe
     context_object_name = 'recipes'
@@ -43,7 +44,10 @@ class RecipeListViewBase(ListView):
         return ctx
 
 
-# Create your views here.
+class RecipeListViewHome(RecipeListViewBase):
+    template_name = 'recipes/pages/home.html'
+
+
 def home(request):
     recipes = Recipe.objects.filter(is_published=True).order_by('-id')
 
