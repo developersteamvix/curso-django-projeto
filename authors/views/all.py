@@ -8,7 +8,7 @@ from recipes.models import Recipe
 
 from authors.forms.recipe_form import AuthorRecipeForm
 
-from .forms import LoginForm, RegisterForm
+from authors.forms import LoginForm, RegisterForm
 
 
 # Create your views here.
