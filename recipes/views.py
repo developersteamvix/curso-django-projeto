@@ -59,6 +59,9 @@ class RecipeListViewCategory(RecipeListViewBase):
             category__id=self.kwargs.get('category_id')
         )
 
+        if not qs:
+            raise Http404()
+
         return qs
 
     def get_context_data(self, *args, **kwargs):
@@ -84,19 +87,14 @@ class RecipeListViewSearch(RecipeListViewBase):
             ),
         )
 
-        if not qs:
-            raise Http404()
+        # if not qs:
+        #     raise Http404()
 
         return qs
 
     def get_context_data(self, *args, **kwargs):
         search_term = self.request.GET.get('q', '')
         ctx = super().get_context_data(*args, **kwargs)
-        page_obj, pagination_range = make_pagination(
-            self.request,
-            ctx.get('recipes'),
-            PER_PAGE,
-        )
 
         ctx.update(
             {
@@ -114,8 +112,14 @@ class RecipeDetail(DetailView):
     context_object_name = 'recipe'
     template_name = 'recipes/pages/recipe-view.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        qs = qs.filter(is_published=True)
+
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
         context['is_detail_page'] = True
 
         return context
