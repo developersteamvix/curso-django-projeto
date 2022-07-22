@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-21 23:46-0300\n"
+"POT-Creation-Date: 2022-07-22 00:23-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,3 +29,7 @@ msgstr "Servings"
 #: recipes/templates/recipes/partials/recipe.html:79
 msgid "ler mais"
 msgstr "read more"
+
+#: recipes/views.py:103
+msgid "Categoria"
+msgstr "Category"
