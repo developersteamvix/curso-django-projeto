@@ -5,6 +5,7 @@ from django.db import models
 from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
 from tag.models import Tag
 
 
@@ -17,7 +18,7 @@ class Category(models.Model):
 
 
 class Recipe(models.Model):
-    title = models.CharField(max_length=65)
+    title = models.CharField(max_length=65, verbose_name=_('Título'))
     description = models.CharField(max_length=165)
     slug = models.SlugField(unique=True)
     preparation_time = models.IntegerField()
@@ -39,6 +40,10 @@ class Recipe(models.Model):
         User, on_delete=models.SET_NULL, null=True,
     )
     tags = models.ManyToManyField(Tag, blank=True, default='')
+
+    class Meta:
+        verbose_name = _('Receita')
+        verbose_name_plural = _('Receitas')
 
     def __str__(self):
         return self.title
