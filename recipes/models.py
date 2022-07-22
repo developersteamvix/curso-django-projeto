@@ -40,7 +40,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(Tag, blank=True, default='')
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.title
 
     def get_absolute_url(self):
